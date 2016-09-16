@@ -1,0 +1,26 @@
+Fridge:
+- Filling:
+- - Scanning with OCR (Google Vision API)
+
+- Emptying:
+- - Camera before after images
+- - - No need for recipe processing
+- - - Lots of cameras needed
+- - Buttons
+- - - Inconvenient
+- - 'Amazon Dash Buttons'
+- - ML for prediction of usage
+
+- Price tracking
+- - Recommendations for other supermarkets
+
+- Predict needed produce
+- - Frequency of going to the supermarket
+
+- Spoilage prediction
+
+Tech stack:
+- Front end: React Native -> all apps at once
+- Back end:
+- - Database (Firebase) -> Share your fridge
+- - Python backend
