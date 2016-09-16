@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7.11 (/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/bin/python2.7)" project-jdk-type="Python SDK" />
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;&#10;print 'up[dated'" sdk-home="/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/bin/python2.7">
+        <envs>
+          <env key="PYTHONPATH" value="$PYTHONPATH:$HOME/code/mrgcorelibs/build/datatypes:$HOME/code/mrgcorelibs/src/tools-python:$HOME/code/mrgcorelibs/src/tools-python/console/FrameLoggerTools" />
+        </envs>
+        <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;&#10;print 'up[dated'" />
+        <option name="mySdkHome" value="/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/bin/python2.7" />
+        <option name="myEnvs">
+          <map>
+            <entry key="PYTHONPATH" value="$PYTHONPATH:$HOME/code/mrgcorelibs/build/datatypes:$HOME/code/mrgcorelibs/src/tools-python:$HOME/code/mrgcorelibs/src/tools-python/console/FrameLoggerTools" />
+          </map>
+        </option>
+      </console-settings>
+    </option>
+  </component>
+</project>
