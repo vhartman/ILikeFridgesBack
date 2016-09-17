@@ -50,6 +50,9 @@ def append_row_object(row, new_column):
 	row.append(new_column)
 
 
+# ================================================= FINIDING PRODUCTS =================================================
+
+
 def concatenate_strings(rows):
 	concatenated_rows = []
 	for row_y, row in rows:
@@ -75,6 +78,9 @@ def concatenate_strings(rows):
 
 	return concatenated_rows
 
+
+# ================================================= PRINTERS =================================================
+
 def pretty_print_concatenated(rows):
 	object_count = 0
 
@@ -98,6 +104,16 @@ def pretty_print(rows):
 		print row_str
 
 	return object_count
+
+def print_predictions(rows):
+	for row_y, row in rows:
+		row_str = "y: %d, " % row_y
+		for column in row:
+			row_str += (column["prediction"] + " ")
+		print row_str
+
+
+# ================================================= FILTERING ROWS =================================================
 
 
 def remove_lower(resp):
@@ -135,6 +151,9 @@ def remove_upper(block):
 
     return item_block
 
+
+# ================================================= HELPERS =================================================
+
 def is_number(s):
     try:
         int(s)
@@ -161,14 +180,41 @@ def fix_commas(string):
 def decimals(string):
 	return len(string) - string.index('.') - 1
 
+def rectangle_center(json_obj):
+	vertices = json_obj["boundingPoly"]["vertices"]
+	x_center = (vertices[0]["x"] + vertices[2]["x"])/2
+	y_center = (vertices[0]["y"] + vertices[2]["y"])/2
+	return x_center, y_center
 
-def make_amount_predictions(rows):
+def get_height(json_obj):
+	vertices = json_obj["boundingPoly"]["vertices"]
+	return (vertices[2]["y"] - vertices[0]["y"])
+
+def get_width(json_obj):
+	vertices = json_obj["boundingPoly"]["vertices"]
+	return (vertices[2]["x"] - vertices[0]["x"])
+
+def to_number(s):
+    try:
+        return int(s)
+    except ValueError:
+		return float(s)
+
+
+
+# ================================================= CLASSIFYING =================================================
+
+
+def make_meaning_predictions(rows):
 	for row_y, row in rows:
-		for column in row:
-			column["prediction"] = make_meaning_prediction(column['description'])
+		for idx, column in enumerate(row):
+			column["prediction"] = make_single_prediction(column['description'])
+			if idx == len(row)-1:
+				if column["prediction"] != "price" or column["prediction"] != "unknown":
+					column["prediction"] = "unknown"
 
 
-def make_meaning_prediction(string):
+def make_single_prediction(string):
 	prediction = "unknown"
 
 	# String
@@ -191,35 +237,99 @@ def make_meaning_prediction(string):
 
 	return prediction
 
-
-def rectangle_center(json_obj):
-	vertices = json_obj["boundingPoly"]["vertices"]
-	x_center = (vertices[0]["x"] + vertices[2]["x"])/2
-	y_center = (vertices[0]["y"] + vertices[2]["y"])/2
-	return x_center, y_center
-
-
-def amount_cluster_center(product_rows):
+def cluster_data(product_rows):
 	amount_x = 0
 	amount_count = 0
 	product_x = 0
 	product_count = 0
-	price_x = 0
-	price_count = 0
+
+	widest_amount = 0
+	widest_product = 0
+
+	no_amount_column = False
+
+	products = {}
 	for y_coord, product in product_rows:
 		for column in product:
+			if column["prediction"] == "product":
+				# if there is another product with the same name, we are sure that there is no column for the amount
+				if column["description"] in products:
+					no_amount_column = True
+					
+				x_center, y_center = rectangle_center(column)
+				product_x += x_center
+				product_count+=1
+				this_width = get_width(column)
+				if this_width > widest_product:
+					widest_product = this_width
+
+
 			if column["prediction"] == "amount":
 				x_center, y_center = rectangle_center(column)
 				amount_x += x_center
 				amount_count+=1
+				this_width = get_width(column)
+				if this_width > widest_amount:
+					widest_amount = this_width
 
-	return amount_x/amount_count
+	if amount_count == 0 or no_amount_column:
+		return product_x/product_count, widest_product, None, None
+	else:
+		return product_x/product_count, widest_product, amount_x/amount_count, widest_amount
+
+
+def determine_amount(row, amount_x, error_margin):
+	if amount_x == None:
+		return 1
+	else:
+		for column in row:
+			x_center, y_center = rectangle_center(column)
+			if amount_x + error_margin >= x_center and amount_x - error_margin <= x_center:
+				return to_number(column["description"])			
+	return 1
+
+def determine_product(row, product_x, error_margin):
+	if product_x == None:
+		return None
+	else:
+		for column in row:
+			x_center, y_center = rectangle_center(column)
+			if product_x + error_margin >= x_center and product_x - error_margin <= x_center:
+				return column["description"]			
+	return None
+
+
+def get_product_list(rows, product_x, product_width, amount_x, amount_width):
+	a_error_margin = amount_width*0.3
+	p_error_margin = product_width*0.2
+
+	products = {}
+	for y_coord, row in rows:
+		amount = determine_amount(row, amount_x, a_error_margin)
+		product = determine_product(row, product_x, p_error_margin)
+
+		if product == None:
+			continue
+
+		if product not in products:
+			products[product] = amount
+		else:
+			products[product] += amount
+
+	product_list = []
+	for product in products:
+		json_obj = {}
+		json_obj["description"] = product
+		json_obj["amount"] = products[product]
+		product_list.append(json_obj)
+
+	return product_list
 
 # ====================================================== MAIN ======================================================
 
 
 if __name__ == '__main__':
-	with open('data.json') as data_file:
+	with open('data1.json') as data_file:
 		data = json.load(data_file)
 
 
@@ -241,6 +351,8 @@ if __name__ == '__main__':
 
 	pretty_print(item_block)
 
+	print "----------------------- PRODUCTS DONE -----------------------"
+
 
 	# CONCATENATE SINGLE STRINGS INTO PRODUCT NAMES
 
@@ -252,14 +364,26 @@ if __name__ == '__main__':
 	print "original_objects = %d " % (len(data["textAnnotations"])-1)
 	print "rows = %d"  % len(rows)
 
-
-	make_amount_predictions(concatenated_rows)
-	amount_center = amount_cluster_center(concatenated_rows)
-
-
-	print amount_center
-
 	# MAKE PREDICTION ABOUT MEANING OF A FIELD
+
+	make_meaning_predictions(concatenated_rows)
+
+	print_predictions(concatenated_rows)
+
+	#print amount_center
+	#print amount_width
+
+	#coord, row_list = concatenated_rows[2]
+	#print row_list[1]
+
+	# CLUSTER THE FIELDS ACCORDING TO PREDICTIONS
+	product_center, product_width, amount_center, amount_width = cluster_data(concatenated_rows)
+
+	# GET THE PRODUCT LIST
+	product_list = get_product_list(concatenated_rows, product_center, product_width, amount_center, amount_width)
+
+	print product_list
+
 
 
 
