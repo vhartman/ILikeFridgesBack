@@ -26,6 +26,9 @@ def request(image):
             },
             'features': [{
                 'type': 'TEXT_DETECTION'
+            },
+            {
+              'type': 'LOGO_DETECTION'
             }]
         }]
     })
