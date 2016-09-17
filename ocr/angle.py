@@ -31,7 +31,7 @@ def compute_angle(image):
             hor_d = h/2 - j
             ver_d = w/2 - i
             dist = np.sqrt(ver_d*ver_d + hor_d*hor_d)
-            if mag_filt[i][j] <= 0.65*maximum or mag_filt[i][j] >= 0.8*maximum:
+            if mag_filt[i][j] <= 0.65*maximum:
                 mag_filt[i][j] = 0
             elif dist > max_dist:
                 max_dist = dist

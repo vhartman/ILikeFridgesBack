@@ -8,22 +8,8 @@ from document_scanner.pyimagesearch import transform
 from document_scanner.pyimagesearch.transform_receipt_image import transform_receipt_image
 from ocr.angle import compute_angle
 
-def remove_lower(resp):
-    res = []
-    for row_y, row in resp:
-        for column in row:
-            if column['description'] == 'TOTAL':
-                y_lim = row_y
-                break
-    for row_y, row in resp:
-        if row_y < y_lim:
-            res.append(row)
-
-    return res
-
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-image = cv2.imread('Data/20160917_231049.jpg')
-image = transform.rotate(image, 90);
+image = cv2.imread('Data/20160917_091338.jpg')
 
 warped = transform_receipt_image(image)
 if type(warped) != int:
