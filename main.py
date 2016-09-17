@@ -22,7 +22,7 @@ def remove_lower(resp):
     return res
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-image = cv2.imread('Data/20160916_234152.jpg')
+image = cv2.imread('Data/20160917_231054.jpg')
 
 warped = transform_receipt_image(image)
 if type(warped) != int:
@@ -36,7 +36,7 @@ if type(warped) != int:
     response = ocr.request(warped)
 else:
     print "FFT2"
-    img_s = transform.resize(image, height = 300)
+    img_s = transform.resize(image, height = 400)
     angle = compute_angle(img_s)
 
     img_req = transform.rotate(image, angle)
@@ -45,14 +45,14 @@ else:
     # cv2.imshow("Rotated", img_rot_disp)
     # cv2.waitKey(0)
 
-img_req = transform.resize(img_req, height = 800)
+img_req = transform.resize(img_req, height = 1000)
 response = ocr.request(img_req)
 
 cv2.imshow("Orginial", transform.resize(image, height = 800))
 cv2.imshow("Request", img_req)
 cv2.waitKey(0)
 
-# print response
+print response
 
 rows = preprocess.extract_rows(response['responses'][0])
 lower_block = preprocess.remove_lower(rows)
