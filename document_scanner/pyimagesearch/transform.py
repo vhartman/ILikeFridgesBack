@@ -115,5 +115,8 @@ def four_point_transform(image, pts):
 	M = cv2.getPerspectiveTransform(rect, dst)
 	warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
 
+	warped = cv2.transpose(warped)
+	warped = cv2.flip(warped,flipCode=1)
+
 	# return the warped image
 	return warped
