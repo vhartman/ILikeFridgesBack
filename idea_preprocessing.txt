@@ -1,0 +1,10 @@
+Receipt preprocessing procedure:
+- Scale image down
+- Convert to BW
+- Rotate for horizontal/vertical alignment
+- Crop to only receipt
+- Reduce to 1D image: results in a barcode-like-thing after thresholding
+- Crop around the bars in a certain size (certain fontsize), and put through OCR
+- - gives back one line of text
+- - must contain word (product)/number (price) pair
+- - look at first word to identify if it goes in the fridge
