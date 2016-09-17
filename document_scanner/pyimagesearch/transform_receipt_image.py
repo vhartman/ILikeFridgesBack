@@ -1,5 +1,6 @@
 import transform
 import cv2
+import numpy as np
 
 def transform_receipt_image(image):
     ratio = image.shape[0] / 500.0
@@ -15,7 +16,7 @@ def transform_receipt_image(image):
     # # show the original image and the edge detected image
     # print "STEP 1: Edge Detection"
     # cv2.imshow("Image", image)
-    # cv2.imshow("Edged", edged)
+    # # cv2.imshow("Edged", edged)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
@@ -29,7 +30,7 @@ def transform_receipt_image(image):
         # approximate the contour
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-
+        #
         # cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
         # cv2.imshow("Outline", image)
         # cv2.waitKey(0)
@@ -55,8 +56,11 @@ def transform_receipt_image(image):
     # convert the warped image to grayscale, then threshold it
     # to give it that 'black and white' paper effect
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-    # warped = threshold_adaptive(warped, 251, offset = 10)
+
+    # warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
     warped = warped.astype("uint8") * 255
+    # kernel = np.ones((5,5),np.uint8)
+    # warped = cv2.dilate(warped,kernel)
 
     # show the original and scanned images
     # print "STEP 3: Apply perspective transform"
