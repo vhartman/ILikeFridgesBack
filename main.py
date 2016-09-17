@@ -1,11 +1,13 @@
 import os
 from OcrApiRequest import ocr
+from ocr.get_item_block import get_item_block
+from ocr import preprocess
 from document_scanner.pyimagesearch import transform
 from document_scanner.pyimagesearch.transform_receipt_image import transform_receipt_image
 import cv2
 
 def remove_lower(resp):
-    res = [];
+    res = []
     for attr in response['responses'][0]['textAnnotations']:
         #print attr
         if attr['description'] == 'TOTAL':
@@ -23,10 +25,14 @@ warped = transform_receipt_image(image)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
 response = ocr.request(warped)
 
-#print response
-res = remove_lower(response)
+lower_block = remove_lower(response)
+print lower_block
 
-print res
+
+block = get_item_block(lower_block)
+
+print block
+
 
 cv2.imshow("Scanned", transform.resize(warped, height = 650))
 cv2.waitKey(0)
