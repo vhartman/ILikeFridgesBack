@@ -1,6 +1,7 @@
 import base64
 import httplib2
 import json
+import cv2
 
 from pprint import pprint
 from googleapiclient import discovery
@@ -15,7 +16,9 @@ def request(image):
     service = discovery.build('vision', 'v1', credentials=credentials,
                               discoveryServiceUrl=DISCOVERY_URL)
 
-    image_content = base64.b64encode(image.read())
+    buf = cv2.imencode('.jpg', image)[1]
+    image_content = base64.encodestring(buf)
+    #image_content = base64.b64encode(image.read())
     service_request = service.images().annotate(body={
         'requests': [{
             'image': {
@@ -33,6 +36,6 @@ def request(image):
     return response
 
 if __name__ == '__main__':
-    with open('../Data/20160916_234152.jpg', 'rb') as image:
-        request(image)
+    image = cv2.imread('../Data/20160916_234152.jpg')
+    print request(image)
     #request('../Data/20160916_234152.jpg')
