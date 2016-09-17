@@ -21,7 +21,7 @@ def compute_angle(image):
     w = len(mag_n)
     h = len(mag_n[0])
 
-    max_hor_d = 0
+    max_dist = 0
     angle = 0
 
     mag_filt = mag
@@ -30,24 +30,22 @@ def compute_angle(image):
         for j in range(h):
             hor_d = h/2 - j
             ver_d = w/2 - i
-            if mag_filt[i][j] <= 0.7*maximum:
+            dist = np.sqrt(ver_d*ver_d + hor_d*hor_d)
+            if mag_filt[i][j] <= 0.65*maximum:
                 mag_filt[i][j] = 0
-            elif abs(hor_d) > max_hor_d:
-                max_hor_d = abs(hor_d)
-                angle = np.arctan2(ver_d*h, hor_d*w)
+            elif dist > max_dist:
+                max_dist = dist
+                angle = np.arctan2(ver_d*h, hor_d*w)/3.141526*180
 
     # print angle
 
     # cv2.imshow("Original", img_d)
     # cv2.waitKey(0)
 
-    #mag_grey = cv2.cvtColor(mag, cv2.COLOR_BGR2GRAY)
-    #(_, mag_thresh) = cv2.threshold(mag_grey, 128, 255, cv2.THRESH_BINARY)
-
-    # plt.subplot(121),plt.imshow(img_bw, cmap = 'gray')
-    # plt.title('Input Image'), plt.xticks([]), plt.yticks([])
-    # plt.subplot(122),plt.imshow(mag)
-    # plt.title('Magnitude Spectrum'), plt.xticks([]), plt.yticks([])
-    # plt.show()
+    plt.subplot(121),plt.imshow(img_bw, cmap = 'gray')
+    plt.title('Input Image'), plt.xticks([]), plt.yticks([])
+    plt.subplot(122),plt.imshow(mag)
+    plt.title('Magnitude Spectrum'), plt.xticks([]), plt.yticks([])
+    plt.show()
 
     return angle
