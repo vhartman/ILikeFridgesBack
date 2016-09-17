@@ -11,11 +11,16 @@ def extract_rows(data):
 
 	for entry in info_data:
 		# skip the data about the whole receipt
-		if "locale" in entry:
+		if ("locale" in entry or
+		'x' not in entry["boundingPoly"]["vertices"][0] or
+		'x' not in entry["boundingPoly"]["vertices"][2] or
+		'y' not in entry["boundingPoly"]["vertices"][0] or
+		'y' not in entry["boundingPoly"]["vertices"][2]):
 			continue
 		if entry["description"] == "l":
 			entry["description"] = "1"
 		vertices = entry["boundingPoly"]["vertices"]
+
 		x_center = (vertices[0]["x"] + vertices[2]["x"])/2
 		y_center = (vertices[0]["y"] + vertices[2]["y"])/2
 

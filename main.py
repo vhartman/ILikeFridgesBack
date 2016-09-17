@@ -21,20 +21,27 @@ def remove_lower(resp):
 
     return res
 
-image = cv2.imread('Data/20160917_091338.jpg')
-img_s = transform.resize(image, height = 500)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
 
-angle = compute_angle(img_s)
-img_rot = transform.rotate(image, angle/3.1415*180 - 90)
+image = cv2.imread('Data/20160917_091338.jpg')
 
 warped = transform_receipt_image(image)
+if warped != -1:
+    response = ocr.request(warped)
+else:
+    img_s = transform.resize(image, height = 300)
+    img_ss = transform.resize(image, height = 1000)
+    angle = compute_angle(img_s)/3.1415*180 + 180
 
-cv2.imshow("Rotated", img_rot)
-cv2.imshow("Warped", warped)
-cv2.waitKey(0)
+    img_rot = transform.rotate(img_ss, angle)
+    img_rot_disp = transform.rotate(img_s, angle)
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-response = ocr.request(warped)
+    response = ocr.request(img_rot)
+
+    cv2.imshow("Rotated", img_rot_disp)
+    cv2.waitKey(0)
+
+    # print response
 
 rows = preprocess.extract_rows(response['responses'][0])
 lower_block = preprocess.remove_lower(rows)
@@ -42,10 +49,9 @@ item_block = preprocess.remove_upper(lower_block)
 
 preprocess.pretty_print(item_block)
 
-#block = get_item_block(lower_block)
+# cv2.imshow("Warped", warped)
+# cv2.imshow("Rotated", img_rot)
+# cv2.waitKey(0)
 
-#print block
-
-#
 # cv2.imshow("Scanned", transform.resize(warped, height = 650))
 # cv2.waitKey(0)
