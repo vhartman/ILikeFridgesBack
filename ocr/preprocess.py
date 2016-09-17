@@ -304,7 +304,7 @@ def determine_product(row, product_x, error_margin):
 	return None
 
 
-def get_product_list(rows, product_x, product_width, amount_x, amount_width):
+def get_product_dict(rows, product_x, product_width, amount_x, amount_width):
 	a_error_margin = amount_width*0.3
 	p_error_margin = product_width*0.2
 
@@ -321,11 +321,14 @@ def get_product_list(rows, product_x, product_width, amount_x, amount_width):
 		else:
 			products[product] += amount
 
+	return products
+
+def get_product_list(products_dict):
 	product_list = []
-	for product in products:
+	for product in products_dict:
 		json_obj = {}
 		json_obj["description"] = product
-		json_obj["amount"] = products[product]
+		json_obj["amount"] = products_dict[product]
 		product_list.append(json_obj)
 
 	return product_list
@@ -385,7 +388,7 @@ if __name__ == '__main__':
 	product_center, product_width, amount_center, amount_width = cluster_data(concatenated_rows)
 
 	# GET THE PRODUCT LIST
-	product_list = get_product_list(concatenated_rows, product_center, product_width, amount_center, amount_width)
+	product_list = get_product_dict(concatenated_rows, product_center, product_width, amount_center, amount_width)
 
 	print product_list
 
