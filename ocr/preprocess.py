@@ -1,7 +1,7 @@
 import json
 import pdb
 
-error_margin = 1
+error_margin = 0.5
 
 def extract_rows(data):
 	info_data = data["textAnnotations"]
@@ -51,13 +51,18 @@ def pretty_print(rows):
 	object_count = 0
 
 	for row_y, row in rows:
-		row_str = "y: " + str(row_y) + ", "
+		row_str = "y: %d, " % row_y
 		for column in row:
 			row_str += (column["description"] + " ")
 			object_count+=1
 		print row_str
 
 	return object_count
+
+
+
+# ====================================================== MAIN ======================================================
+
 
 with open('data.json') as data_file:
 	data = json.load(data_file)
@@ -66,9 +71,11 @@ with open('data.json') as data_file:
 rows = extract_rows(data)
 
 matched_objects = pretty_print(rows)
-"""
-print "\n\n"
 
-print "matched_objects = " + str(matched_objects)
-print "original_objects = " + str(len(data["textAnnotations"])-1)
-"""
+print "\n\n"
+print "matched_objects = %d " % matched_objects
+print "original_objects = %d " % (len(data["textAnnotations"])-1)
+print "rows = %d"  % len(rows)
+
+
+
