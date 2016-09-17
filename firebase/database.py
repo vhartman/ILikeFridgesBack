@@ -24,8 +24,19 @@ config = {
 }
 
 firebase = pyrebase.initialize_app(config)
+
+db = firebase.database()
+auth = firebase.auth()
+user = auth.sign_in_with_email_and_password("devstar1022@gcplab.me", "yCYb9nedu9")
+
+#print user
+
 st = firebase.storage()
-st.child("20160916_234139.jpg").download("downloaded.jpg")
+
+storage.child("images/example.jpg").put("example2.jpg", user['idToken'])
+
+print "PUT DONE"
+st.child("images/20160916_234139.jpg").download("downloaded.jpg")
 
 
 """
