@@ -16,8 +16,9 @@ def extract_rows(data):
 		if entry["description"] == "l":
 			entry["description"] = "1"
 		vertices = entry["boundingPoly"]["vertices"]
-		x_center = (vertices[0]["x"] + vertices[2]["x"])/2
-		y_center = (vertices[0]["y"] + vertices[2]["y"])/2
+		#x_center = (vertices[0]["x"] + vertices[2]["x"])/2
+		#y_center = (vertices[0]["y"] + vertices[2]["y"])/2
+		x_center, y_center = rectangle_center(entry)
 
 		#width 	= vertices[2]["x"] - vertices[0]["x"]
 		height	= (vertices[2]["y"] - vertices[0]["y"])
@@ -47,6 +48,43 @@ def append_row_object(row, new_column):
 			row.insert(idx, new_column)
 			return
 	row.append(new_column)
+
+
+def concatenate_strings(rows):
+	concatenated_rows = []
+	for row_y, row in rows:
+		row[0]["description"] = fix_commas(row[0]["description"])
+		concatenated_rows.append( (row_y, [row[0]]) )
+		last_is_str = not is_number(row[0]["description"])
+		for column in row[1:]:
+			#if column["description"] == "3.84":
+			#	pdb.set_trace()
+			column["description"] = fix_commas(column["description"])
+			y_coord, new_row = concatenated_rows[-1]
+			if last_is_str and not is_number(column["description"]):			
+				new_row[-1]["boundingPoly"]["vertices"][1] = column["boundingPoly"]["vertices"][1]
+				new_row[-1]["boundingPoly"]["vertices"][2] = column["boundingPoly"]["vertices"][2]
+				new_row[-1]["description"] += (" " + column["description"]) 
+			else:
+				new_row.append(column)
+
+			if is_number(column["description"]):
+				last_is_str = False
+			else:
+				last_is_str = True
+
+	return concatenated_rows
+
+def pretty_print_concatenated(rows):
+	object_count = 0
+
+	for row_y, row in rows:
+		print "y: %d, " % row_y
+		for column in row:
+			print column["description"]
+			object_count+=1
+		print "------------------------- NEW ROW -------------------------"
+	return object_count
 
 
 def pretty_print(rows):
@@ -97,6 +135,85 @@ def remove_upper(block):
 
     return item_block
 
+def is_number(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        try:
+        	float(s)
+        	return True
+        except ValueError:
+	        return False
+
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+	    return False
+
+def fix_commas(string):
+	if "," not in string:
+		return string
+	return string.replace(",", ".")	        
+
+def decimals(string):
+	return len(string) - string.index('.') - 1
+
+
+def make_amount_predictions(rows):
+	for row_y, row in rows:
+		for column in row:
+			column["prediction"] = make_meaning_prediction(column['description'])
+
+
+def make_meaning_prediction(string):
+	prediction = "unknown"
+
+	# String
+	if not is_number(string): 
+		if len(string) >= 3:
+			prediction = "product"
+
+	# Integer
+	elif is_int(string): 
+		if int(string) != 0:
+			prediction = "amount"
+
+	# Float - price
+	elif decimals(string) == 2: 
+		prediction = "price"
+
+	# Float - amount
+	elif decimals(string) == 3: 
+		prediction = "amount"
+
+	return prediction
+
+
+def rectangle_center(json_obj):
+	vertices = json_obj["boundingPoly"]["vertices"]
+	x_center = (vertices[0]["x"] + vertices[2]["x"])/2
+	y_center = (vertices[0]["y"] + vertices[2]["y"])/2
+	return x_center, y_center
+
+
+def amount_cluster_center(product_rows):
+	amount_x = 0
+	amount_count = 0
+	product_x = 0
+	product_count = 0
+	price_x = 0
+	price_count = 0
+	for y_coord, product in product_rows:
+		for column in product:
+			if column["prediction"] == "amount":
+				x_center, y_center = rectangle_center(column)
+				amount_x += x_center
+				amount_count+=1
+
+	return amount_x/amount_count
 
 # ====================================================== MAIN ======================================================
 
@@ -114,3 +231,35 @@ if __name__ == '__main__':
 	print "matched_objects = %d " % matched_objects
 	print "original_objects = %d " % (len(data["textAnnotations"])-1)
 	print "rows = %d"  % len(rows)
+
+
+
+	lower_block = remove_lower(rows)
+	item_block = remove_upper(lower_block)
+
+	print "----------------------- PRODUCTS ONLY -----------------------"
+
+	pretty_print(item_block)
+
+
+	# CONCATENATE SINGLE STRINGS INTO PRODUCT NAMES
+
+	concatenated_rows = concatenate_strings(item_block)
+	concatenated_objects = pretty_print_concatenated(concatenated_rows)
+
+	print "\n\n"
+	print "concatenated_objects = %d " % concatenated_objects
+	print "original_objects = %d " % (len(data["textAnnotations"])-1)
+	print "rows = %d"  % len(rows)
+
+
+	make_amount_predictions(concatenated_rows)
+	amount_center = amount_cluster_center(concatenated_rows)
+
+
+	print amount_center
+
+	# MAKE PREDICTION ABOUT MEANING OF A FIELD
+
+
+
