@@ -1,7 +1,7 @@
 import os
 from OcrApiRequest import ocr
 from ocr.get_item_block import get_item_block
-from ocr import preprocess
+from ocr.preprocess import extract_rows
 from document_scanner.pyimagesearch import transform
 from document_scanner.pyimagesearch.transform_receipt_image import transform_receipt_image
 import cv2
@@ -25,13 +25,15 @@ warped = transform_receipt_image(image)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
 response = ocr.request(warped)
 
-lower_block = remove_lower(response)
-print lower_block
+response = extract_rows(response['responses'][0])
+
+#lower_block = remove_lower(response)
+#print lower_block
 
 
-block = get_item_block(lower_block)
+#block = get_item_block(lower_block)
 
-print block
+#print block
 
 
 cv2.imshow("Scanned", transform.resize(warped, height = 650))

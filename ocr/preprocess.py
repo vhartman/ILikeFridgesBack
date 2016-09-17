@@ -16,13 +16,13 @@ def extract_rows(data):
 		vertices = entry["boundingPoly"]["vertices"]
 		x_center = (vertices[0]["x"] + vertices[2]["x"])/2
 		y_center = (vertices[0]["y"] + vertices[2]["y"])/2
-		
+
 		#width 	= vertices[2]["x"] - vertices[0]["x"]
 		height	= (vertices[2]["y"] - vertices[0]["y"])
 
 		for row_y, row in data_rows:
 			if (row_y <= (y_center+height*error_margin)) and (row_y >= (y_center - height*error_margin)):
-				
+
 				# change the current average horizontal center
 				row_y = (row_y*len(row) + y_center) / (len(row) + 1)
 
@@ -30,7 +30,7 @@ def extract_rows(data):
 				append_row_object(row, entry)
 				#row.append(entry)
 				break
-				
+
 		# add a new row if not there
 		else:
 			new_row = []
@@ -64,18 +64,16 @@ def pretty_print(rows):
 # ====================================================== MAIN ======================================================
 
 
-with open('data.json') as data_file:
-	data = json.load(data_file)
+if __name__ == '__main__':
+	with open('data.json') as data_file:
+		data = json.load(data_file)
 
 
-rows = extract_rows(data)
+	rows = extract_rows(data)
 
-matched_objects = pretty_print(rows)
+	matched_objects = pretty_print(rows)
 
-print "\n\n"
-print "matched_objects = %d " % matched_objects
-print "original_objects = %d " % (len(data["textAnnotations"])-1)
-print "rows = %d"  % len(rows)
-
-
-
+	print "\n\n"
+	print "matched_objects = %d " % matched_objects
+	print "original_objects = %d " % (len(data["textAnnotations"])-1)
+	print "rows = %d"  % len(rows)
