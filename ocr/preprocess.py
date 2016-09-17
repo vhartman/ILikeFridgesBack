@@ -228,8 +228,8 @@ def make_single_prediction(string):
 			prediction = "product"
 
 	# Integer
-	elif is_int(string):
-		if int(string) != 0:
+	elif is_int(string): 
+		if int(string) < 100 and int(string) > 1:
 			prediction = "amount"
 
 	# Float - price
