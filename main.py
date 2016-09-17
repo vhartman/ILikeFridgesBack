@@ -32,7 +32,7 @@ def remove_lower(resp):
 #
 #     return res
 
-image = cv2.imread('Data/20160916_234139.jpg')
+image = cv2.imread('Data/20160916_234214.jpg')
 warped = transform_receipt_image(image)
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
