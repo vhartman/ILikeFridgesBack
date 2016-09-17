@@ -31,13 +31,13 @@ def compute_angle(image):
             hor_d = h/2 - j
             ver_d = w/2 - i
             dist = np.sqrt(ver_d*ver_d + hor_d*hor_d)
-            if mag_filt[i][j] <= 0.65*maximum:
+            if mag_filt[i][j] <= 0.7*maximum:
                 mag_filt[i][j] = 0
             elif dist > max_dist:
                 max_dist = dist
                 angle = np.arctan2(ver_d*h, hor_d*w)/3.1415*180
 
-    # print angle
+    print angle
 
     # cv2.imshow("Original", img_d)
     # cv2.waitKey(0)

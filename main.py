@@ -9,7 +9,14 @@ from document_scanner.pyimagesearch.transform_receipt_image import transform_rec
 from ocr.angle import compute_angle
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-image = cv2.imread('Data/20160917_091338.jpg')
+image = cv2.imread('Data/20160917_231043.jpg')
+
+w = len(image[0])
+h = len(image)
+
+if w > h:
+    print "Rotating"
+    image = transform.rotate(image, -90)
 
 warped = transform_receipt_image(image)
 if type(warped) != int:
@@ -30,14 +37,12 @@ else:
     # cv2.imshow("Rotated", img_rot_disp)
     # cv2.waitKey(0)
 
-# img_req = transform.resize(img_req, height = 1000)
+img_req = transform.resize(img_req, height = 1000)
 response = ocr.request(img_req)
 
-# cv2.imshow("Orginial", transform.resize(image, height = 800))
-# cv2.imshow("Request", img_req)
-# cv2.waitKey(0)
-
-# print response
+cv2.imshow("Orginial", transform.resize(image, height = 800))
+cv2.imshow("Request", img_req)
+cv2.waitKey(0)
 
 rows = preprocess.extract_rows(response['responses'][0])
 lower_block = preprocess.remove_lower(rows)
