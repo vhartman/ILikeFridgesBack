@@ -1,66 +1,63 @@
 import json
+import pdb
 
-import sys
-
-row_coeff = 2
+error_margin = 1
 
 def extract_rows(data):
 	info_data = data["textAnnotations"]
 
-	data_in_rows = {}
+	data_rows = []
 
 	for entry in info_data:
+		# skip the data about the whole receipt
+		if "locale" in entry:
+			continue
+
 		vertices = entry["boundingPoly"]["vertices"]
-		#x_center = (vertices[0]["x"] + vertices[3]["x"])/2
-		y_center = (vertices[0]["y"] + vertices[3]["y"])/2
+		x_center = (vertices[0]["x"] + vertices[2]["x"])/2
+		y_center = (vertices[0]["y"] + vertices[2]["y"])/2
 		
-		#width 	= vertices[3]["x"] - vertices[0]["x"]
-		height	= vertices[3]["y"] - vertices[0]["y"]
+		#width 	= vertices[2]["x"] - vertices[0]["x"]
+		height	= (vertices[2]["y"] - vertices[0]["y"])
 
-		for row_center in data_in_rows:
-			if (row_center <= (y_center+height*row_coeff)) and (row_center >= (y_center - height*row_coeff)):
-				# add object to the list for the row
-				#print "to append"
-				append_row_object(data_in_rows[row_center], entry)
+		for row_y, row in data_rows:
+			if (row_y <= (y_center+height*error_margin)) and (row_y >= (y_center - height*error_margin)):
+				
 				# change the current average horizontal center
-				new_row_center = (row_center*(len(data_in_rows[row_center])-1) + y_center) / len(data_in_rows[row_center])
+				row_y = (row_y*len(row) + y_center) / (len(row) + 1)
 
-				row_list = data_in_rows[row_center]
-				#data_in_rows.pop(row_center)
-				#data_in_rows[new_row_center] = row_list
-
-				data_in_rows[new_row_center] = data_in_rows[row_center]
-				del data_in_rows[row_center]
+				# add object to the list for the row
+				append_row_object(row, entry)
+				#row.append(entry)
 				break
-
+				
 		# add a new row if not there
 		else:
-			data_in_rows[y_center] = []
-			data_in_rows[y_center].append(entry)
+			new_row = []
+			new_row.append(entry)
+			data_rows.append( (y_center,new_row) )
 
-		#print "added"
+	return data_rows
 
-	return data_in_rows
-
-def append_row_object(row_list, new_column):
-	for idx, column in enumerate(row_list):
-		if column["boundingPoly"]["vertices"][0]["x"] >= new_column["boundingPoly"]["vertices"][3]["x"]:
-			row_list.insert(idx, new_column)
+def append_row_object(row, new_column):
+	for idx, column in enumerate(row):
+		if column["boundingPoly"]["vertices"][0]["x"] >= new_column["boundingPoly"]["vertices"][2]["x"]:
+			row.insert(idx, new_column)
 			return
-	row_list.append(new_column)
-
-
+	row.append(new_column)
 
 
 def pretty_print(rows):
-	for entry in rows:
-		row = ""
-		for column in rows[entry]:
-			row += (column["description"] + " ")
-		print row
-			#sys.stdout.write(column["description"] + " ")
+	object_count = 0
 
-		#print "\n"
+	for row_y, row in rows:
+		row_str = "y: " + str(row_y) + ", "
+		for column in row:
+			row_str += (column["description"] + " ")
+			object_count+=1
+		print row_str
+
+	return object_count
 
 with open('data.json') as data_file:
 	data = json.load(data_file)
@@ -68,7 +65,10 @@ with open('data.json') as data_file:
 
 rows = extract_rows(data)
 
-#print "extracted"
+matched_objects = pretty_print(rows)
+"""
+print "\n\n"
 
-pretty_print(rows)
-
+print "matched_objects = " + str(matched_objects)
+print "original_objects = " + str(len(data["textAnnotations"])-1)
+"""
