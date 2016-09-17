@@ -1,10 +1,12 @@
 import os
 import numpy as np
+import cv2
+
 from OcrApiRequest import ocr
 from ocr import preprocess
 from document_scanner.pyimagesearch import transform
 from document_scanner.pyimagesearch.transform_receipt_image import transform_receipt_image
-import cv2
+from ocr.angle import compute_angle
 
 def remove_lower(resp):
     res = []
@@ -33,6 +35,9 @@ def remove_lower(resp):
 #     return res
 
 image = cv2.imread('Data/20160916_234205.jpg')
+
+angle = compute_angle(transform.resize(image, height = 500));
+img_rot = transform.rotate(image, angle/3.1415*180)
 
 warped = transform_receipt_image(image)
 

@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 def compute_angle(image):
-    img_d = transform.resize(image, height = 500)
+    img_d = image
     img_gr = cv2.cvtColor(img_d, cv2.COLOR_BGR2GRAY)
     (thresh, img_bw) = cv2.threshold(img_gr, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
@@ -38,10 +38,7 @@ def compute_angle(image):
 
     print angle
 
-    img_rot = transform.rotate(img_d, angle/3.1415*180)
-
     cv2.imshow("Original", img_d)
-    cv2.imshow("Rotated", img_rot)
     cv2.waitKey(0)
 
     #mag_grey = cv2.cvtColor(mag, cv2.COLOR_BGR2GRAY)
