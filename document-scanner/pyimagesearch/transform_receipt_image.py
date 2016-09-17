@@ -1,4 +1,4 @@
-from pyimagesearch import transform
+import transform
 import cv2
 
 def transform_receipt_image(image):
@@ -30,11 +30,10 @@ def transform_receipt_image(image):
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
 
-        cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
-        cv2.imshow("Outline", image)
-        cv2.waitKey(0)
-
-        cv2.destroyAllWindows()
+        # cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
+        # cv2.imshow("Outline", image)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
         # if our approximated contour has four points, then we
         # can assume that we have found our screen
