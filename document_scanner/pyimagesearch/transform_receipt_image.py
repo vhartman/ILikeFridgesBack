@@ -56,10 +56,10 @@ def transform_receipt_image(image):
 
         # convert the warped image to grayscale, then threshold it
         # to give it that 'black and white' paper effect
-        #warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+        # warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
 
         # warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
-        #warped = warped.astype("uint8") * 255
+        # warped = warped.astype("uint8") * 255
         # kernel = np.ones((5,5),np.uint8)
         # warped = cv2.dilate(warped,kernel)
 

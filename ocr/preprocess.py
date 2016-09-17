@@ -69,10 +69,10 @@ def concatenate_strings(rows):
 			#	pdb.set_trace()
 			column["description"] = fix_commas(column["description"])
 			y_coord, new_row = concatenated_rows[-1]
-			if last_is_str and not is_number(column["description"]):			
+			if last_is_str and not is_number(column["description"]):
 				new_row[-1]["boundingPoly"]["vertices"][1] = column["boundingPoly"]["vertices"][1]
 				new_row[-1]["boundingPoly"]["vertices"][2] = column["boundingPoly"]["vertices"][2]
-				new_row[-1]["description"] += (" " + column["description"]) 
+				new_row[-1]["description"] += (" " + column["description"])
 			else:
 				new_row.append(column)
 
@@ -180,7 +180,7 @@ def is_int(s):
 def fix_commas(string):
 	if "," not in string:
 		return string
-	return string.replace(",", ".")	        
+	return string.replace(",", ".")
 
 def decimals(string):
 	return len(string) - string.index('.') - 1
@@ -223,21 +223,21 @@ def make_single_prediction(string):
 	prediction = "unknown"
 
 	# String
-	if not is_number(string): 
+	if not is_number(string):
 		if len(string) >= 3:
 			prediction = "product"
 
 	# Integer
-	elif is_int(string): 
+	elif is_int(string):
 		if int(string) != 0:
 			prediction = "amount"
 
 	# Float - price
-	elif decimals(string) == 2: 
+	elif decimals(string) == 2:
 		prediction = "price"
 
 	# Float - amount
-	elif decimals(string) == 3: 
+	elif decimals(string) == 3:
 		prediction = "amount"
 
 	return prediction
@@ -260,7 +260,7 @@ def cluster_data(product_rows):
 				# if there is another product with the same name, we are sure that there is no column for the amount
 				if column["description"] in products:
 					no_amount_column = True
-					
+
 				x_center, y_center = rectangle_center(column)
 				product_x += x_center
 				product_count+=1
@@ -290,7 +290,7 @@ def determine_amount(row, amount_x, error_margin):
 		for column in row:
 			x_center, y_center = rectangle_center(column)
 			if amount_x + error_margin >= x_center and amount_x - error_margin <= x_center:
-				return to_number(column["description"])			
+				return to_number(column["description"])
 	return 1
 
 def determine_product(row, product_x, error_margin):
@@ -300,7 +300,7 @@ def determine_product(row, product_x, error_margin):
 		for column in row:
 			x_center, y_center = rectangle_center(column)
 			if product_x + error_margin >= x_center and product_x - error_margin <= x_center:
-				return column["description"]			
+				return column["description"]
 	return None
 
 
@@ -391,7 +391,3 @@ if __name__ == '__main__':
 	product_list = get_product_dict(concatenated_rows, product_center, product_width, amount_center, amount_width)
 
 	print product_list
-
-
-
-
