@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hackzurich16-1022",
+  "private_key_id": "9213bc019af2804180af70f6e40be665efd0ae52",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDRxV9tXXWvOusE\nL1ebxgf1N77m0lXYZsEmIzgMa/06TlLLKERaVydFPpI9B1rWpCFXeWDWbWX532AA\nNuX9YgrfcMVrT900NovJK3wi2ljdSKIJ86w2yS5tOBkVPUgRDFuv9xX7yxEIooxh\nNON3cmMJFppuFQVqbpeDqJ9I/fdLS7oBRzkAiOkdmBhAzUDXwG8fh1YHf/cnq/xW\n6+pxM9XxgdhPEFGK7MU6aZxVpTAWzD2yekbzhZUzXMJZe7hUeSUwF1nc1FxvJzNi\nvA8ZDPU5lIl5GebDZtZAdBVJIB31ksR6mW3oXMj2wqaQTLEkrE4C9UurXXoSrsen\nnYL3CMVbAgMBAAECggEBAJrhY6fYDYAnvEYGvmShPlbrpeO/AOsaUxnZfxSM1xcp\npS+it3UMTE5v+IFe4M8BuCxhzgIEG/r11mfSINWIggafuOOWv/hBHcyWcr05AcvA\nSQOYClsZB1JUzRBFguQzf67YfD7Am/8IJSXQavJSXpTjP3pvwuPma7Al3BWEjgXk\nuWXfl7xEDjE3q+zv1Zjic6dWMGhnmpVS6DXjxvcOveKMB36Dlpa7v7L4rODe+0/g\n12WtfID76FuU4nmXPy5SM2HC9CYYytHxxrvB19hAy46tHoVoIaj9iWiGyOwyWHFu\nYKGWy/waxfxuqAv2J5NPS5eCc8NonP+Ae+yfwcwpOAECgYEA6fOI/hkZe0xNZgfV\np1piyqNbsnxnr7mYJSENc3m+HqThSaOfiyWNMwgsHVsV9L5tQCkJHCwfvXlqgUtb\n9KXtjjhNw3VP8A/Fcgy84Ik01/J9QdXqaqOWQqhUcT4FF6acnio2aMO+ccnysfLP\nk/oip1+by9T52oK5Kb+EXFeXtFsCgYEA5Ypyde0mcs4bimRUd6W+PtVL0/hVnNYE\nyUKhQkdcCot9ewnvVzfiG7cokTvNs64OaIUeysCqgdTWREenuldJMdVoVjaw4WKu\nFX17iJM6Deqr9amgPgylXySpRcVWYaVfkbZ0mP0NOELcKeNQBQMjt9QDE5Uk1Spv\nqaVVPSk8AwECgYApBg9rnzMcr9CSp6ULZ4oTRnn53l7ALadEO3uEWEDCVt86bnq3\nh6ou3Kv/qc070XiO26NBUWtvai8G5RQG3mG9opngQF34Fovk597m8KhXhan5NW2Z\nrX3XynSkNt/luc2U3ooT7N8kTOlF0vIbXK1e9CD5qSr26h1V+MNY/fMYKQKBgHv7\nzx2Bbf4e8+NJlBJYdS0tOtsQzPV86HLpSX8qWj3b4HhAAoZiyf/ca84etloyTtgH\n53zummqsUtvotGFDWmbPdZ7zxZDII226LKq1k2sG8cEs0UASxpRgkgn8sE7n63oi\nSlKEhMp52r/JZ2R9sKJPoyXFrnJxjITep+70QdUBAoGBAMY0VBA9deD1ry1/H9pr\nLA8/hf6IP+V6pqinENY3HpeshNPH3Z9SalsMIWqGD2HMavctgIGBSmRrIcEirECW\n5VKIRXpVsy+umZwK0I1FOHNqZFsAqYJl3QEY4s8lge9V51UeL5VuKEfVty+Rz2O+\nh2T2dgh3SZcJCljF76UwiR0r\n-----END PRIVATE KEY-----\n",
+  "client_email": "ilikefridges@hackzurich16-1022.iam.gserviceaccount.com",
+  "client_id": "104515623088584899487",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ilikefridges%40hackzurich16-1022.iam.gserviceaccount.com"
+}
