@@ -51,20 +51,23 @@ def transform_receipt_image(image):
 
     # apply the four point transform to obtain a top-down
     # view of the original image
-    warped = transform.four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
+    if 'screenCnt' in locals():
+        warped = transform.four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
 
-    # convert the warped image to grayscale, then threshold it
-    # to give it that 'black and white' paper effect
-    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+        # convert the warped image to grayscale, then threshold it
+        # to give it that 'black and white' paper effect
+        warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
 
-    # warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
-    warped = warped.astype("uint8") * 255
-    # kernel = np.ones((5,5),np.uint8)
-    # warped = cv2.dilate(warped,kernel)
+        # warped = cv2.adaptiveThreshold(warped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
+        warped = warped.astype("uint8") * 255
+        # kernel = np.ones((5,5),np.uint8)
+        # warped = cv2.dilate(warped,kernel)
 
-    # show the original and scanned images
-    # print "STEP 3: Apply perspective transform"
-    # cv2.imshow("Original", imutils.resize(orig, height = 650))
-    # cv2.imshow("Scanned", transform.resize(warped, height = 650))
+        # show the original and scanned images
+        # print "STEP 3: Apply perspective transform"
+        # cv2.imshow("Original", imutils.resize(orig, height = 650))
+        # cv2.imshow("Scanned", transform.resize(warped, height = 650))
 
-    return warped
+        return warped
+    else:
+        return -1

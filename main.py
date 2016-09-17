@@ -1,30 +1,57 @@
 import os
-from OcrApiRequest import ocr
-from ocr import preprocess
-from document_scanner.pyimagesearch.transform_receipt_image import transform_receipt_image
+import numpy as np
 import cv2
 
+from OcrApiRequest import ocr
+from ocr import preprocess
+from document_scanner.pyimagesearch import transform
+from document_scanner.pyimagesearch.transform_receipt_image import transform_receipt_image
+from ocr.angle import compute_angle
 
-image = cv2.imread('Data/20160916_234205.jpg')
-warped = transform_receipt_image(image)
+def remove_lower(resp):
+    res = []
+    for row_y, row in resp:
+        for column in row:
+            if column['description'] == 'TOTAL':
+                y_lim = row_y
+                break
+    for row_y, row in resp:
+        if row_y < y_lim:
+            res.append(row)
+
+    return res
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-response = ocr.request(warped)
+
+image = cv2.imread('Data/20160917_091338.jpg')
+
+warped = transform_receipt_image(image)
+if warped != -1:
+    response = ocr.request(warped)
+else:
+    img_s = transform.resize(image, height = 300)
+    img_ss = transform.resize(image, height = 1000)
+    angle = compute_angle(img_s)/3.1415*180 + 180
+
+    img_rot = transform.rotate(img_ss, angle)
+    img_rot_disp = transform.rotate(img_s, angle)
+
+    response = ocr.request(img_rot)
+
+    cv2.imshow("Rotated", img_rot_disp)
+    cv2.waitKey(0)
+
+    # print response
 
 rows = preprocess.extract_rows(response['responses'][0])
 lower_block = preprocess.remove_lower(rows)
-
-
-
 item_block = preprocess.remove_upper(lower_block)
 
 preprocess.pretty_print(item_block)
 
+# cv2.imshow("Warped", warped)
+# cv2.imshow("Rotated", img_rot)
+# cv2.waitKey(0)
 
-#block = get_item_block(lower_block)
-
-#print block
-
-#
 # cv2.imshow("Scanned", transform.resize(warped, height = 650))
 # cv2.waitKey(0)
