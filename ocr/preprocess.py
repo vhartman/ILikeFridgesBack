@@ -1,4 +1,5 @@
 import json
+import numpy as np
 import pdb
 
 error_margin = 0.5
@@ -12,7 +13,8 @@ def extract_rows(data):
 		# skip the data about the whole receipt
 		if "locale" in entry:
 			continue
-
+		if entry["description"] == "l":
+			entry["description"] = "1"
 		vertices = entry["boundingPoly"]["vertices"]
 		x_center = (vertices[0]["x"] + vertices[2]["x"])/2
 		y_center = (vertices[0]["y"] + vertices[2]["y"])/2
@@ -59,6 +61,41 @@ def pretty_print(rows):
 
 	return object_count
 
+
+def remove_lower(resp):
+    res = []
+    y_lim = np.inf
+    for row_y, row in resp:
+        for column in row:
+            if column['description'] == 'TOTAL' or column['description'] == 'TOTAL CHF' :
+                y_lim = np.min([y_lim,row_y])
+
+    for row_y, row in resp:
+        if row_y < y_lim:
+            res.append((row_y,row))
+
+    return res
+
+def remove_upper(block):
+    block.reverse()
+    item_block = []
+    y_lim, row = block[0]
+    row_distance = 1.5 * np.abs(row[1]['boundingPoly']['vertices'][3]['y']-
+								row[1]['boundingPoly']['vertices'][0]['y'])
+
+    for row_y, row in block:
+        if np.abs(y_lim-row_y)>row_distance:
+            y_lim = row_y
+            break
+        y_lim = row_y
+
+    for row_y, row in block:
+        if row_y > y_lim:
+            item_block.append((row_y,row))
+
+    item_block.reverse()
+
+    return item_block
 
 
 # ====================================================== MAIN ======================================================
