@@ -1,5 +1,4 @@
 
-import pyrebase
 import execjs
 import os
 
@@ -43,10 +42,11 @@ st.child("images/20160916_234139.jpg").download("downloaded.jpg")
 
 os.environ["EXECJS_RUNTIME"] = "Node"
 
+node = execjs.get("Node")
 
-firebase_js = execjs.compile("""
-  var firebase = require("firebase");
+firebase_js = node.compile("""
 function init_firebase(){
+  var firebase = require("firebase");
   // Set the configuration for your app
   var config = {
     apiKey: 'AIzaSyAb8M6OlMBfGfg5XgJIkh5i4yO3KP2qu2o',

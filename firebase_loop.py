@@ -1,6 +1,7 @@
 from firebase import firebase
 import os
 
+import cv2
 from OcrApiRequest import ocr
 from ocr import preprocess
 from document_scanner.pyimagesearch import transform
@@ -14,8 +15,9 @@ firebase = firebase.FirebaseApplication('https://ilikefridges-735ac.firebaseio.c
 while True:
 
     # check for flag
+    items = {}
     while True:
-        flag = firebase.get('flag/0',None)
+        flag = {'state':'True'} #firebase.get('flag/0',None)
         if flag['state'] == 'True':
             result = firebase.put('flag', '0', {'state': 'False'})
             items = firebase.get('items',None)
@@ -40,10 +42,14 @@ while True:
     item_block = preprocess.remove_upper(lower_block)
 
     # get changes
-
+    concatenated_rows = preprocess.concatenate_strings(item_block)
+    concatenated_objects = preprocess.pretty_print_concatenated(concatenated_rows)
+    preprocess.make_meaning_predictions(concatenated_rows)
+    product_center, product_width, amount_center, amount_width = preprocess.cluster_data(concatenated_rows)
+    product_dict = preprocess.get_product_dict(concatenated_rows, product_center, product_width, amount_center, amount_width)
+    changes = preprocess.update_items(items, product_dict)
 
     # iterate through list
-    changes = []
     for id,object in changes:
         result = firebase.put('items', id, object)
 
