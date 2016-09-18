@@ -9,40 +9,42 @@ from document_scanner.pyimagesearch.transform_receipt_image import transform_rec
 from ocr.angle import compute_angle
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-image = cv2.imread('Data/20160917_231043.jpg')
+image = cv2.imread('Data/20160916_234205.jpg')
 
-w = len(image[0])
-h = len(image)
+# w = len(image[0])
+# h = len(image)
+#
+# if w > h:
+#     print "Rotating"
+#     image = transform.rotate(image, -90)
 
-if w > h:
-    print "Rotating"
-    image = transform.rotate(image, -90)
+# warped = transform_receipt_image(image)
+# #if type(warped) != int:
+# if False:
+#     print "Warping"
+#
+#     img_req = warped
+#
+#     # cv2.imshow("Warped", warped)
+#     # cv2.waitKey(0)
+# else:
+# print "FFT2"
+img_s = transform.resize(image, height = 400)
+angle = compute_angle(img_s)
 
-warped = transform_receipt_image(image)
-if type(warped) != int:
-    print "Warping"
+img_req = transform.rotate(image, angle+180)
 
-    img_req = warped
-
-    # cv2.imshow("Warped", warped)
-    # cv2.waitKey(0)
-else:
-    print "FFT2"
-    img_s = transform.resize(image, height = 400)
-    angle = compute_angle(img_s)
-
-    img_req = transform.rotate(image, angle)
-
-    # img_rot_disp = transform.rotate(img_s, angle)
-    # cv2.imshow("Rotated", img_rot_disp)
-    # cv2.waitKey(0)
+# img_rot_disp = transform.rotate(img_s, angle)
+# cv2.imshow("Rotated", img_rot_disp)
+# cv2.waitKey(0)
 
 img_req = transform.resize(img_req, height = 1000)
-response = ocr.request(img_req)
 
-cv2.imshow("Orginial", transform.resize(image, height = 800))
-cv2.imshow("Request", img_req)
-cv2.waitKey(0)
+# cv2.imshow("Orginial", transform.resize(image, height = 800))
+# cv2.imshow("Request", img_req)
+# cv2.waitKey(0)
+
+response = ocr.request(img_req)
 
 rows = preprocess.extract_rows(response['responses'][0])
 lower_block = preprocess.remove_lower(rows)
