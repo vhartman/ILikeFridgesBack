@@ -9,7 +9,7 @@ from document_scanner.pyimagesearch.transform_receipt_image import transform_rec
 from ocr.angle import compute_angle
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'Hack Zurich 2016 1022-9213bc019af2.json'
-image = cv2.imread('Data/20160916_234205.jpg')
+image = cv2.imread('Data/20160917_231100.jpg')
 
 # w = len(image[0])
 # h = len(image)
@@ -32,7 +32,7 @@ image = cv2.imread('Data/20160916_234205.jpg')
 img_s = transform.resize(image, height = 400)
 angle = compute_angle(img_s)
 
-img_req = transform.rotate(image, angle+180)
+img_req = transform.rotate(image, angle)
 
 # img_rot_disp = transform.rotate(img_s, angle)
 # cv2.imshow("Rotated", img_rot_disp)
