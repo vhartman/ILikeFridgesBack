@@ -333,6 +333,18 @@ def get_product_list(products_dict):
 
 	return product_list
 
+def update_items(current_items, receipt_input):
+	changed_items = []
+
+	for product in receipt_input:
+		changed_items.append(product)
+
+		if product in current_items:
+			current_items += receipt_input[product]
+		else:
+			current_items = receipt_input[product]
+
+	return changed_items
 # ====================================================== MAIN ======================================================
 
 
