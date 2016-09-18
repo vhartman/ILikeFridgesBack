@@ -25,7 +25,14 @@ while True:
 
 
     # image processing
-    response = []
+    image = cv2.imread('Data/20160916_234205.jpg') # temporary
+    img_s = transform.resize(image, height = 400)
+    angle = compute_angle(img_s)
+
+    img_req = transform.rotate(image, angle+180)
+    img_req = transform.resize(img_req, height = 1000)
+
+    response = ocr.request(img_req)
 
     # text processing
     rows = preprocess.extract_rows(response['responses'][0])
