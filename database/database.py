@@ -15,19 +15,26 @@ def update_items(current_items, receipt_input):
 	return changed_items
 
 
-config = {
-  "apiKey": "AIzaSyAb8M6OlMBfGfg5XgJIkh5i4yO3KP2qu2o",
-  "authDomain": "ilikefridges-735ac.firebaseapp.com",
-  "databaseURL": "https://ilikefridges-735ac.firebaseio.com",
-  "storageBucket": "ilikefridges-735ac.appspot.com",
-  "serviceAccount": "ILikeFridges-dd134404e804.json"
-}
+def setup_pyrebase():
 
-firebase = pyrebase.initialize_app(config)
+	config = {
+	  "apiKey": "AIzaSyAb8M6OlMBfGfg5XgJIkh5i4yO3KP2qu2o",
+	  "authDomain": "ilikefridges-735ac.firebaseapp.com",
+	  "databaseURL": "https://ilikefridges-735ac.firebaseio.com",
+	  "storageBucket": "ilikefridges-735ac.appspot.com",
+	  "serviceAccount": "ILikeFridges-dd134404e804.json"
+	}
 
-storage = firebase.storage()
+	firebase = pyrebase.initialize_app(config)
+	storage = firebase.storage()
 
-storage.child("20160916_234139.jpg").download("downloaded.jpg")
+	return storage
+
+if __name__ == '__main__':
+
+	storage = setup_pyrebase()
+
+	storage.child("20160916_234139.jpg").download("downloaded.jpg")
 
 
 
